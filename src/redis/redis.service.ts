@@ -20,6 +20,7 @@ export class RedisService {
 	) {
 		if (config.applicationLevel !== EnvironmentType.Production) {
 			this.testCaching();
+			this.furtherTestCaching(50);
 		}
 	}
 
@@ -35,7 +36,30 @@ export class RedisService {
 
 		this.logger.debug('Test Caching Result', getTestCached);
 
-		this.deleteCache(testCacheKey);
+		this.scanDeleteCache(testCacheKey);
+	}
+
+	public async furtherTestCaching(times: number): Promise<void> {
+		for (let i = 0; i < times; i++) {
+			const testKey = `hello:another:world:${i}`;
+			const testData = {
+				iterateNumber: i,
+				author: 'John Florentino D. Dunglao',
+				description: 'This test is specifically made for the scan function',
+			};
+
+			await this.setCache(testKey, testData);
+		}
+
+		const scannedKeys = await this.scanForKeys('hello:another:world:*');
+
+		this.logger.debug(JSON.stringify(scannedKeys));
+		
+		for (const scanned of scannedKeys) {
+			this.deleteCache(scanned);
+		}
+
+		this.deleteCache('this:is:an:unexisting:key:check:if:no:error');
 	}
 
 	public async getCache(key: string): Promise<Cache> {
@@ -47,33 +71,49 @@ export class RedisService {
 	}
 
 	public async scanForKeys(pattern: string): Promise<string[]> {
-		const { err, reply } = await new Promise(async (resolve, reject) => {
-			this.cacheManager.store.getClient().scan(
-				'0', // <-- cursor
-				'match',
-				pattern,
-				(err, reply) => {
-					if (err) {
-						reject(new Error(err.message));
-					}
+		this.logger.debug('RUNNING SCAN FOR KEYS', pattern);
+		
+		const scanFullResult = [];
 
-					resolve({ err, reply: reply[1] }); // <-- [0] contains the count
-				}
-			);
+		await new Promise(async (resolve, reject): Promise<void> => {
+			const scannerFunction = async (cursorNumber: string) => {
+				this.cacheManager.store.getClient().scan(
+					cursorNumber,
+					'match',
+					pattern,
+					async (err, reply) => {
+						if (err) {
+							reject(new Error(err.message));
+						}
+
+						scanFullResult.push(...reply[1]);
+						
+						if (reply[0] !== '0') {
+							await scannerFunction(reply[0]);
+							return;
+						}
+
+						this.logger.debug('Redis scanner working perfectly ¯\_(ツ)_/¯');
+						resolve({});
+					},
+				);
+			};
+
+			await scannerFunction('0');
 		});
 
-		if (err) {
-			throw new Error(err.message);
-		}
-
-		return reply;
+        return scanFullResult;
 	}
 
-	public async deleteCache(pattern: string): Promise<void> {
+	public async scanDeleteCache(pattern: string): Promise<void> {
 		const deleteKeys = await this.scanForKeys(pattern);
 
 		for (const key of deleteKeys) {
-			await this.cacheManager.del(key);
+			await this.deleteCache(key);
 		}
+	}
+
+	public async deleteCache(keyName: string): Promise<void> {
+		this.cacheManager.del(keyName);
 	}
 }
