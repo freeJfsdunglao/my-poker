@@ -81,7 +81,7 @@ export class RedisService {
 					cursorNumber,
 					'match',
 					pattern,
-					async (err, reply) => {
+					(err, reply) => {
 						if (err) {
 							reject(new Error(err.message));
 						}
@@ -89,7 +89,7 @@ export class RedisService {
 						scanFullResult.push(...reply[1]);
 						
 						if (reply[0] !== '0') {
-							await scannerFunction(reply[0]);
+							scannerFunction(reply[0]);
 							return;
 						}
 
