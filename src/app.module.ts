@@ -6,6 +6,7 @@ import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { RedisModule } from './redis/redis.module';
 import { RandomizerModule } from './randomizer/randomizer.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
+import { TypeormModule } from './typeorm/typeorm.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
     RabbitmqModule, 
     RedisModule, 
     RandomizerModule, 
-    SchedulerModule,
+    SchedulerModule, TypeormModule,
   ],
   controllers: [AppController],
   providers: [AppService],

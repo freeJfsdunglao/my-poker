@@ -16,6 +16,7 @@ import { EnvironmentType } from '../common/constants';
 
 const IF_RABBITMQ_WILL_BE_USED = o => o.USE_RABBITMQ === 'true';
 const IF_REDIS_WILL_BE_USED = o => o.USE_REDIS === 'true';
+const IF_DATABASE_WILL_BE_USED = o => o.USE_DATABASE === 'true';
 
 class EnvironmentVariables {
 	@IsNotEmpty()
@@ -64,6 +65,34 @@ class EnvironmentVariables {
 	@IsOptional()
 	@IsInt()
 	REDIS_CACHE_EXPIRY_SECONDS: number;
+
+	@IsBooleanString()
+	USE_DATABASE: string;
+
+	@ValidateIf(IF_DATABASE_WILL_BE_USED)
+	@IsNotEmpty()
+	@IsString()
+	DATABASE_HOST: string;
+
+	@ValidateIf(IF_DATABASE_WILL_BE_USED)
+	@IsNotEmpty()
+	@IsInt()
+	DATABASE_PORT: number;
+
+	@ValidateIf(IF_DATABASE_WILL_BE_USED)
+	@IsNotEmpty()
+	@IsString()
+	DATABASE_USERNAME: string;
+
+	@ValidateIf(IF_DATABASE_WILL_BE_USED)
+	@IsNotEmpty()
+	@IsString()
+	DATABASE_PASSWORD: string;
+
+	@ValidateIf(IF_DATABASE_WILL_BE_USED)
+	@IsNotEmpty()
+	@IsString()
+	DATABASE_NAME: string;
 }
 
 /**
