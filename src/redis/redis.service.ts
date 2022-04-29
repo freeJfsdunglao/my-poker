@@ -93,7 +93,7 @@ export class RedisService {
 							return;
 						}
 
-						this.logger.debug('Redis scanner working perfectly ¯\_(ツ)_/¯');
+						this.logger.debug('Redis scanner working perfectly ¯\\_(ツ)_/¯');
 						resolve({});
 					},
 				);

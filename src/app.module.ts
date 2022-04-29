@@ -7,16 +7,17 @@ import { RedisModule } from './redis/redis.module';
 import { RandomizerModule } from './randomizer/randomizer.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { TypeormModule } from './typeorm/typeorm.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
-  imports: [
-    ConfigurationsModule, 
-    RabbitmqModule, 
-    RedisModule, 
-    RandomizerModule, 
-    SchedulerModule, TypeormModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigurationsModule, 
+        RabbitmqModule, 
+        RedisModule, 
+        RandomizerModule, 
+        SchedulerModule, TypeormModule, LoggerModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class ApplicationModule {}
