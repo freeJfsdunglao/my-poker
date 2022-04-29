@@ -49,4 +49,32 @@ export class ConfigurationsService {
 	get redisExpiry(): number {
 		return this.configService.get('REDIS_CACHE_EXPIRY_SECONDS');
 	}
+
+	get useDatabase(): boolean {
+		return this.configService.get('USE_DATABASE') === this.TRUE;
+	}
+
+	get databaseType(): string {
+		return this.configService.get('DATABASE_TYPE');
+	}
+
+	get databaseHost(): string {
+		return this.configService.get('DATABASE_HOST');
+	}
+
+	get databasePort(): number {
+		return this.configService.get('DATABASE_PORT');
+	}
+
+	get databaseUsername(): string {
+		return this.configService.get('DATABASE_USERNAME');
+	}
+
+	get databasePassword(): string {
+		return this.configService.get('DATABASE_PASSWORD');
+	}
+
+	get databaseName(): string {
+		return this.configService.get('DATABASE_NAME');
+	}
 }

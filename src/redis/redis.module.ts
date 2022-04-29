@@ -8,20 +8,20 @@ import { DEFAULT_REDIS_CACHE_EXPIRY_SECONDS } from '../common/constants';
 
 @Global()
 @Module({
-  imports: [
-    CacheModule.registerAsync({
-      inject: [ConfigurationsService],
-      useFactory: async (config: ConfigurationsService) => ({
-        ttl: config.redisExpiry || DEFAULT_REDIS_CACHE_EXPIRY_SECONDS,
-        store: redisStore,
-        socket: {
-          host: config.redisHost,
-          port: config.redisPort,
-        },
-      }),
-    }),
-  ],
-  providers: [RedisService],
-  exports: [RedisService],
+    imports: [
+        CacheModule.registerAsync({
+            inject: [ConfigurationsService],
+            useFactory: async (config: ConfigurationsService) => ({
+                ttl: config.redisExpiry || DEFAULT_REDIS_CACHE_EXPIRY_SECONDS,
+                store: redisStore,
+                socket: {
+                    host: config.redisHost,
+                    port: config.redisPort,
+                },
+            }),
+        }),
+    ],
+    providers: [RedisService],
+    exports: [RedisService],
 })
 export class RedisModule {}
