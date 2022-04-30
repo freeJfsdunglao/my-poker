@@ -4,10 +4,10 @@ import { SchedulerService } from './scheduler.service';
 import { RandomizerModule } from '../randomizer/randomizer.module';
 
 @Module({
-  imports: [
-    NestScheduleModule.forRoot(),
-    RandomizerModule,
-  ],
-  providers: [SchedulerService],
+    imports: [
+        NestScheduleModule.forRoot(),
+        RandomizerModule,
+    ],
+    providers: [SchedulerService],
 })
 export class SchedulerModule {}

@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule as NestTypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
 import { createConnection } from 'typeorm';
+import { join } from 'path';
 
 import { ConfigurationsService } from '../configurations/configurations.service';
+
+import { BASE_DIR } from '../common/constants';
 
 @Module({
     imports: [
@@ -15,7 +18,7 @@ import { ConfigurationsService } from '../configurations/configurations.service'
                 username: config.databaseUsername,
                 password: config.databasePassword,
                 database: config.databaseName,
-                entities: [__dirname + '/**/*.entity{.ts,.js}'],
+                entities: [join(BASE_DIR, '/**/*.entity{.ts,.js}')],
                 synchronize: true,
             }),
             connectionFactory: async (options) => {

@@ -22,3 +22,8 @@ export enum MicroserviceList {
 export enum MicroserviceQueueList {}
 
 export const DEFAULT_REDIS_CACHE_EXPIRY_SECONDS = 86400; // one day.
+
+export const LOG_DATETIME_FORMAT = 'MM/DD/YYYY, h:mm:ss A';
+export const DEBUGGING_LOG_NAME = 'Winston';
+export const DEFAULT_LOG_CONTEXT = 'AnonymousContext';
+export const DEFAULT_LOG_LEVEL = 'silly';

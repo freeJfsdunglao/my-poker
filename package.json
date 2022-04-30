@@ -36,10 +36,13 @@
     "class-validator": "^0.13.2",
     "javascript-fortuna": "^1.0.10",
     "mysql2": "^2.3.3",
+    "nest-winston": "^1.6.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.2.45"
+    "typeorm": "^0.2.45",
+    "winston": "^3.7.2",
+    "winston-daily-rotate-file": "^4.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
