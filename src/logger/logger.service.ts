@@ -14,7 +14,7 @@ export class LoggerService {
         @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: Logger,
         private readonly config: ConfigurationsService,
     ) {
-        if (config.applicationLevel !== EnvironmentType.Production) {
+        if (this.config.applicationLevel !== EnvironmentType.Production) {
             this.testLogging();
         }
     }
@@ -33,7 +33,7 @@ export class LoggerService {
         
         switch (level) {
             case 'error':
-                this.logger.error(message, metaData, stack, context);
+                this.logger.error(message, metaData, context, stack);
                 break;
             case 'warn':
                 this.logger.warn(message, metaData, context);
