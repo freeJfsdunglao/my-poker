@@ -64,9 +64,14 @@ export class AppController {
         });
     }
 
-    @Get('/test-exception')
+    @Get('/test-http-exception')
     handleTestingOfException(): void {
         throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    @Get('/test-general-error-handler')
+    handleTestingOfGeneralError(): void {
+        throw new Error('Hi. This is a testing of checking the error handler.');
     }
 }
         

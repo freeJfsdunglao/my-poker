@@ -11,6 +11,7 @@ import { SchedulerModule } from './scheduler/scheduler.module';
 import { TypeormModule } from './typeorm/typeorm.module';
 import { LoggerModule } from './logger/logger.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { AllExceptionsFilter } from './filters/all-exception.filter';
 
 @Module({
     imports: [
@@ -28,6 +29,10 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
         {
             provide: APP_FILTER,
             useClass: HttpExceptionFilter,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: AllExceptionsFilter,
         }
     ],
 })
