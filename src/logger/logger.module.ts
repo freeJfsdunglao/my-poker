@@ -62,5 +62,6 @@ const isEnvProduction = (config: ConfigurationsService) => {
         }),
     ],
     providers: [LoggerService],
+    exports: [LoggerService],
 })
 export class LoggerModule {}
