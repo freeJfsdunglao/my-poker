@@ -12,6 +12,8 @@ import { TypeormModule } from './typeorm/typeorm.module';
 import { LoggerModule } from './logger/logger.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { AllExceptionsFilter } from './filters/all-exception.filter';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
     imports: [
@@ -22,6 +24,8 @@ import { AllExceptionsFilter } from './filters/all-exception.filter';
         SchedulerModule, 
         TypeormModule, 
         LoggerModule, 
+        UsersModule, 
+        AuthModule, 
     ],
     controllers: [AppController],
     providers: [
