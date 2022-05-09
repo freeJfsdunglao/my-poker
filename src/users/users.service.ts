@@ -14,51 +14,55 @@ export class UsersService {
         private readonly userRepository: Repository<User>,
     ) {}
     
-    async findOneById(id: number): Promise<User> {
+    private async findOneById(id: number): Promise<User> {
         return this.userRepository.findOne(id);
     }    
-
-    async findOneByUsername(username: string): Promise<User> {
-        return this.userRepository.findOne({ username });
-    }
-
-    async findAll(): Promise<User[]> {
+    
+    private async findAll(): Promise<User[]> {
         return this.userRepository.find();
     }
-
-    async create(dto: UserRegistrationDto): Promise<User> {
-        return this.userRepository.create(dto);
+    
+    private async create(dto: UserRegistrationDto): Promise<User> {
+        return this.userRepository.save(dto);
     }
-
+    
     async update(dto: UserUpdateDto, user: User): Promise<User> {
         if (dto.username) {
             user.username = dto.username;
         }
-
+        
         if (dto.fullName) {
             user.fullName = dto.fullName;
         }
-
+        
         if (dto.password && dto.confirmPassword === dto.password) {
             user.password = dto.password;
         } else if (dto.password && dto.confirmPassword !== dto.password) {
             throw new BadRequestException('Passwords do not match');
         }
-
+        
         if (dto.phoneNumber) {
             user.phoneNumber = dto.phoneNumber;
         }
-
+        
         return this.userRepository.save(user);
     }
-
+    
     async userUpdate(id: number, dto: UserUpdateDto): Promise<User> {
         const user = await this.findOneById(id);
-
+        
         if (!user) {
             throw new BadRequestException('Invalid user update');
         }
-
+        
         return await this.update(dto, user);
+    }
+    
+    async userCreate(dto: UserRegistrationDto): Promise<User> {
+        return await this.create(dto);
+    }
+
+    async findOneByUsername(username: string): Promise<User> {
+        return this.userRepository.findOne({ username });
     }
 }
