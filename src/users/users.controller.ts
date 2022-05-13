@@ -14,6 +14,6 @@ export class UsersController {
     @Post('register')
     async register(@Body() dto: UserRegistrationDto) {
         this.loggerService.verbose('registration', UsersController.name, dto);
-        this.usersService.userCreate(dto);
+        await this.usersService.userCreate(dto);
     }
 }
