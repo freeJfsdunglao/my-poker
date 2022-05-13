@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { utilities as nestWinstonUtilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
@@ -19,6 +19,7 @@ const isEnvProduction = (config: ConfigurationsService) => {
     return config.applicationLevel === EnvironmentType.Production;
 };
 
+@Global()
 @Module({
     imports: [
         WinstonModule.forRootAsync({
