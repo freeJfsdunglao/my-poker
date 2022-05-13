@@ -1,13 +1,32 @@
-import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, HttpStatus } from "@nestjs/common";
-import { QueryFailedError } from "typeorm";
+import { ArgumentsHost, Catch, HttpStatus } from "@nestjs/common";
+import { BaseExceptionFilter } from "@nestjs/core";
+import { LoggerService } from "src/logger/logger.service";
+import { TypeORMError } from "typeorm";
 
-@Catch(QueryFailedError)
-export class TypeOrmExceptionFilter implements ExceptionFilter {    
-    catch(exception: QueryFailedError, host: ArgumentsHost) {
+/**
+ * Note: ALL Exception filters
+ */
+@Catch(TypeORMError)
+export class TypeOrmExceptionFilter extends BaseExceptionFilter {
+    constructor(
+        private readonly logger: LoggerService,
+    ) {
+        super();
+    }
+    
+    catch(exception: TypeORMError, host: ArgumentsHost) {
         const response = host.switchToHttp().getResponse();
-        
+
+        this.logger.manualLoggingWithType({
+            logLevel: 'error',
+            context: TypeOrmExceptionFilter.name,
+            message: exception.message,
+            stack: exception.stack,
+            metaData: { exception },
+        });
+
         response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(HttpStatus.BAD_REQUEST)
             .json({ message: 'Something went wrong.' });
     }
 }

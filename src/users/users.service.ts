@@ -13,15 +13,15 @@ export class UsersService {
     ) {}
     
     private async findOneById(id: number): Promise<User> {
-        return this.userRepository.findOne(id);
+        return await this.userRepository.findOne(id);
     }    
     
     private async findAll(): Promise<User[]> {
-        return this.userRepository.find();
+        return await this.userRepository.find();
     }
     
     private async create(dto: UserRegistrationDto): Promise<User> {
-        return this.userRepository.save(dto);
+        return await this.userRepository.save(dto);
     }
     
     async update(dto: UserUpdateDto, user: User): Promise<User> {
@@ -43,7 +43,7 @@ export class UsersService {
             user.phoneNumber = dto.phoneNumber;
         }
         
-        return this.userRepository.save(user);
+        return await this.userRepository.save(user);
     }
     
     async userUpdate(id: number, dto: UserUpdateDto): Promise<User> {
@@ -61,6 +61,6 @@ export class UsersService {
     }
 
     async findOneByUsername(username: string): Promise<User> {
-        return this.userRepository.findOne({ username });
+        return await this.userRepository.findOne({ username });
     }
 }

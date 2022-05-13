@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './all-exception.filter';
-import { GlobalExceptionFilter } from './global-exception.filter';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { TypeOrmExceptionFilter } from './typeorm-exception.filter';
-import { TypeOrmFilter } from './typeorm.filter';
 
 /**
  * REMINDER:
@@ -25,14 +23,6 @@ import { TypeOrmFilter } from './typeorm.filter';
             provide: APP_FILTER,
             useClass: TypeOrmExceptionFilter,
         },
-        {
-            provide: APP_FILTER,
-            useClass: TypeOrmFilter,
-        },
-        {
-            provide: APP_FILTER,
-            useClass: GlobalExceptionFilter,
-        }
     ]
 })
 export class FiltersModule {}
