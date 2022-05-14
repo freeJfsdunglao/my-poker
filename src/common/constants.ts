@@ -27,3 +27,11 @@ export const LOG_DATETIME_FORMAT = 'MM/DD/YYYY, h:mm:ss A';
 export const DEBUGGING_LOG_NAME = 'Winston';
 export const DEFAULT_LOG_CONTEXT = 'AnonymousContext';
 export const DEFAULT_LOG_LEVEL = 'silly';
+
+export enum INITIAL_WEBSOCKET_ROOMS {
+	NOTIFICATIONS = 'notifications',
+}
+
+export const WEBSOCKET_GAME_NAMESPACE = '/game';
+
+export const WS_EXCEPTION_NO_SERVER = 'WS_NO_SERVER_ERROR_CODE';

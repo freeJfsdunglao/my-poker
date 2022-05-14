@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ChipsService } from './chips.service';
 
 @Module({
-  providers: [ChipsService]
+  providers: [ChipsService],
+  exports: [ChipsService],
 })
 export class ChipsModule {}
