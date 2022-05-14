@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { ApplicationModule } from './app.module';
 import { ConfigurationsService } from './configurations/configurations.service';
+import { RedisIoAdapter } from './redis/redis-io.adapter';
 
 async function bootstrap() {
     const logger = new Logger(ApplicationModule.name);
@@ -23,6 +24,13 @@ async function bootstrap() {
                 },
             },
         });
+    }
+
+    if (config.willUseRedisCaching) {
+        const redisIoAdapter = new RedisIoAdapter(app, config);
+        await redisIoAdapter.connectToRedis();
+
+        app.useWebSocketAdapter(redisIoAdapter);
     }
     
     /**
