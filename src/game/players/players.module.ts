@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PlayersService } from './players.service';
 
 @Module({
-  providers: [PlayersService]
+  providers: [PlayersService],
+  exports: [PlayersService],
 })
 export class PlayersModule {}
