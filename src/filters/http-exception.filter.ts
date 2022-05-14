@@ -9,7 +9,7 @@ import { Request, Response } from 'express';
 import { LoggerService } from 'src/logger/logger.service';
 
 @Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class HttpExceptionsFilter implements ExceptionFilter {
     constructor(
         private readonly logger: LoggerService,
     ) {}
@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
         this.logger.manualLoggingWithType({
             logLevel: 'error',
-            context: HttpExceptionFilter.name,
+            context: HttpExceptionsFilter.name,
             message: exception.message,
             stack: exception.stack,
             metaData: { request, response },
@@ -33,6 +33,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 statusCode: status,
                 timestamp: new Date().toISOString(),
                 path: request.url,
+                reason: exception.message,
             });
     }
 }

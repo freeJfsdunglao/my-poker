@@ -7,7 +7,7 @@ import { TypeORMError } from "typeorm";
  * Note: ALL Exception filters
  */
 @Catch(TypeORMError)
-export class TypeOrmExceptionFilter extends BaseExceptionFilter {
+export class TypeOrmExceptionsFilter extends BaseExceptionFilter {
     constructor(
         private readonly logger: LoggerService,
     ) {
@@ -19,14 +19,13 @@ export class TypeOrmExceptionFilter extends BaseExceptionFilter {
 
         this.logger.manualLoggingWithType({
             logLevel: 'error',
-            context: TypeOrmExceptionFilter.name,
+            context: TypeOrmExceptionsFilter.name,
             message: exception.message,
             stack: exception.stack,
             metaData: { exception },
         });
 
-        response
-            .status(HttpStatus.BAD_REQUEST)
+        response.status(HttpStatus.BAD_REQUEST)
             .json({ message: 'Something went wrong.' });
     }
 }

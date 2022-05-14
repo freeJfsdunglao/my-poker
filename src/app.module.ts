@@ -13,6 +13,7 @@ import { LoggerModule } from './logger/logger.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FiltersModule } from './filters/filters.module';
+import { PipesModule } from './pipes/pipes.module';
 @Module({
     imports: [
         ConfigurationsModule, 
@@ -25,6 +26,7 @@ import { FiltersModule } from './filters/filters.module';
         UsersModule, 
         AuthModule, 
         FiltersModule, 
+        PipesModule, 
     ],
     controllers: [AppController],
     providers: [AppService],
