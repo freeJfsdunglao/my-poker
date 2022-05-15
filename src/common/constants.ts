@@ -21,6 +21,43 @@ export enum MicroserviceList {
 
 export enum MicroserviceQueueList {}
 
+export enum RoundName {
+	START = 'start',
+	PRE_FLOP = 'pre-flop',
+	FLOP = 'flop',
+	TURN = 'turn',
+	RIVER = 'river',
+	SHOWDOWN = 'showdown',
+	WAITING = 'waiting',
+}
+
+export enum BetAction {
+	BLIND = 'blind',
+	CALL = 'call',
+	BET = 'bet',
+	RAISE = 'raise',
+	FOLD = 'fold',
+	CHECK = 'check',
+}
+
+export enum PlayerStatus {
+	SIT_OUT = 'sit_out',
+	PLAYING = 'playing',
+	FOLDED = 'folded',
+	DISCONNECTED = 'disconnected',
+}
+
+export enum PlayerType {
+	DEALER = 'dealer',
+	SMALL_BLIND = 'small-blind',
+	BIG_BLIND = 'big-blind',
+	PLAYER = 'player',
+}
+
+export enum TableType {
+	TEXAS_HOLDEM = 'texas-holdem',
+}
+
 export const DEFAULT_REDIS_CACHE_EXPIRY_SECONDS = 86400; // one day.
 
 export const LOG_DATETIME_FORMAT = 'MM/DD/YYYY, h:mm:ss A';
@@ -35,3 +72,4 @@ export enum INITIAL_WEBSOCKET_ROOMS {
 export const WEBSOCKET_GAME_NAMESPACE = '/game';
 
 export const WS_EXCEPTION_NO_SERVER = 'WS_NO_SERVER_ERROR_CODE';
+
