@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { FiltersModule } from './filters/filters.module';
 import { PipesModule } from './pipes/pipes.module';
 import { GameModule } from './game/game.module';
+import { InterceptorsModule } from './interceptors/interceptors.module';
 @Module({
     imports: [
         ConfigurationsModule, 
@@ -27,7 +28,7 @@ import { GameModule } from './game/game.module';
         UsersModule, 
         AuthModule, 
         FiltersModule, 
-        PipesModule, GameModule, 
+        PipesModule, GameModule, InterceptorsModule, 
     ],
     controllers: [AppController],
     providers: [AppService],

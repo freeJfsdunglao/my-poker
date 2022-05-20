@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, HttpStatus } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core";
-import { LoggerService } from "src/logger/logger.service";
+import { LoggerService, LogLevel } from "src/logger/logger.service";
 import { TypeORMError } from "typeorm";
 
 /**
@@ -18,7 +18,7 @@ export class TypeOrmExceptionsFilter extends BaseExceptionFilter {
         const response = host.switchToHttp().getResponse();
 
         this.logger.manualLoggingWithType({
-            logLevel: 'error',
+            logLevel: LogLevel.ERROR,
             context: TypeOrmExceptionsFilter.name,
             message: exception.message,
             stack: exception.stack,

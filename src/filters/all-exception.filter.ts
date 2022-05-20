@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, HttpServer } from "@nestjs/common";
 import { AbstractHttpAdapter, BaseExceptionFilter } from "@nestjs/core";
 
-import { LoggerService } from 'src/logger/logger.service';
+import { LoggerService, LogLevel } from 'src/logger/logger.service';
 
 @Catch()
 export class AllExceptionsFilter extends BaseExceptionFilter {
@@ -14,7 +14,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
         if (this.isExceptionObject(exception)) {
             this.logger.manualLoggingWithType({
-                logLevel: 'error',
+                logLevel: LogLevel.ERROR,
                 context: AllExceptionsFilter.name,
                 message: exception.message,
                 stack: exception.stack,
@@ -31,7 +31,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter {
         applicationRef: HttpServer<any, any> | AbstractHttpAdapter<any, any, any>
     ): void {
         this.logger.manualLoggingWithType({
-            logLevel: 'error',
+            logLevel: LogLevel.ERROR,
             context: AllExceptionsFilter.name,
             message: `Exception Type: ${typeof exception}, handleUnknownError is fired.`,
             metaData: { exception },

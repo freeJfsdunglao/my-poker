@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch } from "@nestjs/common";
 import { BaseWsExceptionFilter } from "@nestjs/websockets";
 
-import { LoggerService } from 'src/logger/logger.service';
+import { LoggerService, LogLevel } from 'src/logger/logger.service';
 
 @Catch()
 export class AllWsExceptionsFilter extends BaseWsExceptionFilter {
@@ -14,7 +14,7 @@ export class AllWsExceptionsFilter extends BaseWsExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
         if (this.isExceptionObject(exception)) {
             this.logger.manualLoggingWithType({
-                logLevel: 'error',
+                logLevel: LogLevel.ERROR,
                 context: AllWsExceptionsFilter.name,
                 message: exception.message,
                 stack: exception.stack,
