@@ -78,6 +78,7 @@ export class ConnectionsService {
     
     async onUserConnect(client: Socket, ...args: any[]) {
         await this.joinInitialRooms(client);
+        client.emit('PING', 'PONG');
     }
 
     async onUserDisconnect(client: Socket) {

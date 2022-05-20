@@ -1,5 +1,5 @@
-import { Global, Module } from '@nestjs/common';
-import { utilities as nestWinstonUtilities, WinstonModule } from 'nest-winston';
+import { Global, Inject, Logger, Module } from '@nestjs/common';
+import { utilities as nestWinstonUtilities, WinstonModule, WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 
@@ -62,7 +62,13 @@ const isEnvProduction = (config: ConfigurationsService) => {
             }),
         }),
     ],
-    providers: [LoggerService],
+    providers: [
+        LoggerService,
+        {
+            provide: 'FACTORY_FILTER_FOR_LOGGER',
+            useExisting: LoggerService
+        },
+    ],
     exports: [LoggerService],
 })
 export class LoggerModule {}

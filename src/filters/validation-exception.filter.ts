@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, HttpStatus } from "@nestjs/common";
 import { BaseExceptionFilter } from "@nestjs/core";
 import { ValidationException } from "src/exceptions/validation.exception";
-import { LoggerService } from "src/logger/logger.service";
+import { LoggerService, LogLevel } from "src/logger/logger.service";
 
 @Catch(ValidationException)
 export class ValidationExceptionsFilter extends BaseExceptionFilter {
@@ -17,7 +17,7 @@ export class ValidationExceptionsFilter extends BaseExceptionFilter {
         const request = ctx.getRequest();
 
         this.logger.manualLoggingWithType({
-            logLevel: 'error',
+            logLevel: LogLevel.ERROR,
             context: ValidationExceptionsFilter.name,
             message: exception.message,
             stack: exception.stack,

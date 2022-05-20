@@ -1,3 +1,4 @@
+import { UseFilters, UseInterceptors, UsePipes } from '@nestjs/common';
 import { 
   OnGatewayConnection, 
   OnGatewayDisconnect, 
@@ -10,15 +11,20 @@ import { Server, Socket } from 'socket.io';
 import { ConnectionsService } from './connections/connections.service';
 
 import { WEBSOCKET_GAME_NAMESPACE } from 'src/common/constants';
+import { LoggingWsInterceptor } from 'src/interceptors/logging-ws.interceptor';
+import { ValidationWsExceptionFilter } from 'src/filters/validation-ws-exception.filter';
+import { ValidationWsPipe } from 'src/pipes/validation-ws.pipe';
 
-const WEBSOCKET_PORT = 80;
 const WEBSOCKET_OPTIONS = {
   transports: ['websocket'],
   serveClient: true,
   namespace: WEBSOCKET_GAME_NAMESPACE,
 };
 
-@WebSocketGateway(WEBSOCKET_PORT, WEBSOCKET_OPTIONS)
+@UseFilters(new ValidationWsExceptionFilter())
+@UsePipes(new ValidationWsPipe())
+@UseInterceptors(LoggingWsInterceptor)
+@WebSocketGateway(WEBSOCKET_OPTIONS)
 export class GameGateway 
 implements 
   OnGatewayConnection, 

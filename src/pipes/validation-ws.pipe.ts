@@ -3,11 +3,11 @@ import {
     ValidationError, 
     ValidationPipe as NestValidationPipe
 } from "@nestjs/common";
-import { ValidationException } from "src/exceptions/validation.exception";
+import { ValidationWsException } from "src/exceptions/validation-ws.exception";
 
 
 @Injectable()
-export class ValidationPipe extends NestValidationPipe {
+export class ValidationWsPipe extends NestValidationPipe {
     constructor() {
         super({
             exceptionFactory: (errors: ValidationError[]) => {
@@ -18,7 +18,7 @@ export class ValidationPipe extends NestValidationPipe {
                     };
                 });
 
-                return new ValidationException(messages);
+                return new ValidationWsException(messages);
             }
         })
     }

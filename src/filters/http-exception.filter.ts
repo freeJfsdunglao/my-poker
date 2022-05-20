@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { LoggerService } from 'src/logger/logger.service';
+import { LoggerService, LogLevel } from 'src/logger/logger.service';
 
 @Catch(HttpException)
 export class HttpExceptionsFilter implements ExceptionFilter {
@@ -21,7 +21,7 @@ export class HttpExceptionsFilter implements ExceptionFilter {
         const status = exception.getStatus();
 
         this.logger.manualLoggingWithType({
-            logLevel: 'error',
+            logLevel: LogLevel.ERROR,
             context: HttpExceptionsFilter.name,
             message: exception.message,
             stack: exception.stack,
