@@ -77,4 +77,8 @@ export class ConfigurationsService {
 	get databaseName(): string {
 		return this.configService.get('DATABASE_NAME');
 	}
+	
+	get jwtSecretKey(): string {
+		return this.configService.get('JWT_SECRET_KEY');
+	}
 }

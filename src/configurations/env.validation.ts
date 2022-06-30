@@ -93,6 +93,10 @@ class EnvironmentVariables {
 	@IsNotEmpty()
 	@IsString()
 	DATABASE_NAME: string;
+
+	@IsNotEmpty()
+	@IsString()
+	JWT_SECRET_KEY: string;
 }
 
 /**
