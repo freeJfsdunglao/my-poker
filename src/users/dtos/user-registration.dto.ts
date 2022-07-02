@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
-import { IsMobilePhone, IsString } from "class-validator";
+import { IsEnum, IsMobilePhone, IsString } from "class-validator";
+import { Role } from "src/common/constants";
 
 import { Match } from "src/decorators/match.decorator";
 
@@ -20,4 +21,8 @@ export class UserRegistrationDto {
 
     @IsMobilePhone()
     phoneNumber: string;
+
+    @IsString()
+    @IsEnum(Role)
+    role: Role;
 }
