@@ -72,6 +72,10 @@ export class ConnectionsService {
         this.gameNamespace.emit(eventName, dto);
     }
 
+    async sendToClient(client: Socket, eventName: string, dto: any): Promise<void> {
+        client.emit(eventName, dto);
+    }
+
     async sendToRoom(eventName: string, roomName: string|string[], dto: any) {
         this.gameNamespace.to(roomName).emit(eventName, dto);
     }

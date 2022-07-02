@@ -26,6 +26,10 @@ export class RedisService {
 		this.anotherTesting();
 	}
 
+	public get manager() {
+		return this.cacheManager;
+	}
+
 	public get client() {
 		return this.cacheManager.store.getClient();
 	}

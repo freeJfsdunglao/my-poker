@@ -77,6 +77,7 @@ export const EXCEPTION = 'exception';
 export enum ErrorCode {
 	ACTION_UNAVAILABLE = 'BV001',
 	INVALID_CHIP_AMOUNT = 'BV002',
+	UUID_NOT_GENERATED = 'SYS000',
 }
 
 /**
@@ -94,3 +95,25 @@ export enum Role {
 	SuperAdmin = 'superadmin',
 	Moderator = 'moderator',
 }
+
+export const SECOND = 1000;
+export const MINUTE = 60 * SECOND;
+
+export enum TimeoutMs {
+	AutoFold = 30 * SECOND,
+	SitOut = 5 * MINUTE,
+	TimerBeforeStart = 10 * SECOND,
+}
+
+export enum Delay {}
+
+export enum Blind {
+	Twenty = 20,
+	Fourty = 40,
+	Fifty = 50,
+}
+
+export const DEFAULT_SEAT_LIMIT = 9;
+export const DEFAULT_PLAYERS_TO_START = 2;
+export const MAX_SEAT_LIMIT = 14;
+export const DEFAULT_BLIND_AMOUNT = Blind.Twenty;
