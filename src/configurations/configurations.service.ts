@@ -46,6 +46,14 @@ export class ConfigurationsService {
 		return this.configService.get('REDIS_PORT');
 	}
 
+	get redisPassword(): string {
+		return this.configService.get('REDIS_PASSWORD');
+	}
+
+	get redisDB(): number {
+		return this.configService.get('REDIS_DB') || 0;
+	}
+
 	get redisExpiry(): number {
 		return this.configService.get('REDIS_CACHE_EXPIRY_SECONDS');
 	}

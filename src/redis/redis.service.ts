@@ -22,6 +22,16 @@ export class RedisService {
 			this.testCaching();
 			this.furtherTestCaching(50);
 		}
+
+		this.anotherTesting();
+	}
+
+	public get client() {
+		return this.cacheManager.store.getClient();
+	}
+
+	public get json() {
+		return this.cacheManager.store.getClient().json;
 	}
 
 	public async testCaching(): Promise<void> {
@@ -37,6 +47,13 @@ export class RedisService {
 		this.logger.debug('Test Caching Result', getTestCached);
 
 		this.scanDeleteCache(testCacheKey);
+	}
+
+	public async anotherTesting(): Promise<void> {
+		await this.setCache('sample', { 'hello': 'world' });
+		const data = await this.getCache('sample');
+
+		console.log('testing result', data);
 	}
 
 	public async furtherTestCaching(times: number): Promise<void> {
@@ -62,12 +79,12 @@ export class RedisService {
 		this.deleteCache('this:is:an:unexisting:key:check:if:no:error');
 	}
 
-	public async getCache(key: string): Promise<Cache> {
-		return await this.cacheManager.get(key);
+	public async getCache<T>(key: string): Promise<Cache> {
+		return await this.cacheManager.get<T>(key);
 	}
 
-	public async setCache(key: string, data: Object|string): Promise<Cache> {
-		return await this.cacheManager.set(key, data);
+	public async setCache<T>(key: string, data: Object | string): Promise<Cache> {
+		return await this.cacheManager.set<T>(key, data);
 	}
 
 	public async scanForKeys(pattern: string): Promise<string[]> {
@@ -77,7 +94,7 @@ export class RedisService {
 
 		await new Promise(async (resolve, reject): Promise<void> => {
 			const scannerFunction = async (cursorNumber: string) => {
-				this.cacheManager.store.getClient().scan(
+				this.client.scan(
 					cursorNumber,
 					'match',
 					pattern,
@@ -102,7 +119,7 @@ export class RedisService {
 			await scannerFunction('0');
 		});
 
-        return scanFullResult;
+        return [...new Set(scanFullResult)];
 	}
 
 	public async scanDeleteCache(pattern: string): Promise<void> {

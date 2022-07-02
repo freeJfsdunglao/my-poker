@@ -10,6 +10,8 @@ import {
 	validateSync, 
 	ValidateIf,
 	ValidatorOptions,
+	Min,
+	Max,
 } from 'class-validator';
 
 import { EnvironmentType } from '../common/constants';
@@ -62,6 +64,18 @@ class EnvironmentVariables {
 	REDIS_PORT: number;
 
 	@ValidateIf(IF_REDIS_WILL_BE_USED)
+	@IsString()
+	@IsOptional()
+	REDIS_PASSWORD: string;
+
+	@ValidateIf(IF_REDIS_WILL_BE_USED)
+	@IsOptional()
+	@IsInt()
+	@Min(0)
+	@Max(15)
+	REDIS_DB: number;
+
+	@ValidateIf(IF_REDIS_WILL_BE_USED)
 	@IsOptional()
 	@IsInt()
 	REDIS_CACHE_EXPIRY_SECONDS: number;
@@ -97,6 +111,14 @@ class EnvironmentVariables {
 	@IsNotEmpty()
 	@IsString()
 	JWT_SECRET_KEY: string;
+	
+	@IsNotEmpty()
+	@IsString()
+	JWT_PUBLIC_KEY: string;
+
+	@IsNotEmpty()
+	@IsString()
+	ROLES_KEY: string;
 }
 
 /**

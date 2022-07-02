@@ -17,6 +17,8 @@ import { DEFAULT_REDIS_CACHE_EXPIRY_SECONDS } from '../common/constants';
                 socket: {
                     host: config.redisHost,
                     port: config.redisPort,
+                    select: config.redisDB,
+                    password: config.redisPassword,
                 },
             }),
         }),
