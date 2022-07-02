@@ -1,12 +1,15 @@
+import { Role } from "src/common/constants";
 import { 
     Column, 
     Entity, 
+    Index, 
     PrimaryGeneratedColumn, 
     Unique, 
 } from "typeorm";
 
 
 @Unique('uq_username', ['username'])
+@Index('idx_role', ['role'])
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
@@ -23,4 +26,9 @@ export class User {
 
     @Column()
     phoneNumber: string;
+
+    @Column({
+        default: Role.User,
+    })
+    role: Role;
 }

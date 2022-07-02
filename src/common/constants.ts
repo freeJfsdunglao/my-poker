@@ -86,3 +86,11 @@ export enum ErrorCode {
 export const JWT_EXPIRATION = '60s';
 
 export const PUBLIC_KEY_FOR_AUTH_GUARD = process.env['JWT_PUBLIC_KEY'] || '';
+export const KEY_FOR_ROLES_GUARD = process.env['ROLES_KEY'] || '';
+
+export enum Role {
+	User = 'user',
+	Admin = 'admin',
+	SuperAdmin = 'superadmin',
+	Moderator = 'moderator',
+}

@@ -9,8 +9,7 @@ import { ConfigurationsModule } from 'src/configurations/configurations.module';
 import { ConfigurationsService } from 'src/configurations/configurations.service';
 import { JWT_EXPIRATION } from 'src/common/constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GuardsModule } from './guards/guards.module';
 
 @Module({
   imports: [
@@ -24,15 +23,12 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         signOptions: { expiresIn: JWT_EXPIRATION },
       }),
     }),
+    GuardsModule,
   ],
   providers: [
     AuthService, 
     LocalStrategy,
     JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
   ],
   controllers: [AuthController],
 })
