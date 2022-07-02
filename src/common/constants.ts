@@ -73,3 +73,16 @@ export const WEBSOCKET_GAME_NAMESPACE = '/game';
 
 export const WS_EXCEPTION_NO_SERVER = 'WS_NO_SERVER_ERROR_CODE';
 
+export const EXCEPTION = 'exception';
+export enum ErrorCode {
+	ACTION_UNAVAILABLE = 'BV001',
+	INVALID_CHIP_AMOUNT = 'BV002',
+}
+
+/**
+ * Reference for accepted values.
+ * https://github.com/vercel/ms
+ */
+export const JWT_EXPIRATION = '60s';
+
+export const PUBLIC_KEY_FOR_AUTH_GUARD = process.env['JWT_PUBLIC_KEY'] || '';

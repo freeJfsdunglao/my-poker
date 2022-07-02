@@ -1,5 +1,6 @@
 import { ArgumentsHost, Catch } from "@nestjs/common";
 import { BaseWsExceptionFilter } from "@nestjs/websockets";
+import { EXCEPTION } from "src/common/constants";
 import { ValidationWsException } from "src/exceptions/validation-ws.exception";
 
 @Catch(ValidationWsException)
@@ -12,6 +13,6 @@ export class ValidationWsExceptionFilter extends BaseWsExceptionFilter {
         const ws = host.switchToWs();
         const wsClient = ws.getClient();
 
-        return wsClient.emit('exception', ...exception.validationErrors);
+        return wsClient.emit(EXCEPTION, ...exception.validationErrors);
     }
 }
