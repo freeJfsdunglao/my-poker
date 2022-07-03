@@ -17,6 +17,7 @@ import { ValidationWsPipe } from 'src/pipes/validation-ws.pipe';
 import { GameService } from './game.service';
 import { ClientCreateGameTableDto } from './tables/dtos/client-create-game-table.dto';
 import { JoinGameTableDto } from './tables/dtos/join-game-table.dto';
+import { AllWsExceptionsFilter } from 'src/filters/all-ws-exception.filter';
 
 const WEBSOCKET_OPTIONS = {
   transports: ['websocket'],
@@ -24,7 +25,7 @@ const WEBSOCKET_OPTIONS = {
   namespace: WEBSOCKET_GAME_NAMESPACE,
 };
 
-@UseFilters(new ValidationWsExceptionFilter())
+@UseFilters(new AllWsExceptionsFilter(),new ValidationWsExceptionFilter())
 @UsePipes(new ValidationWsPipe())
 @UseInterceptors(LoggingWsInterceptor)
 @WebSocketGateway(WEBSOCKET_OPTIONS)

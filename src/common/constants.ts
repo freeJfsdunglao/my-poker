@@ -73,11 +73,12 @@ export const WEBSOCKET_GAME_NAMESPACE = '/game';
 
 export const WS_EXCEPTION_NO_SERVER = 'WS_NO_SERVER_ERROR_CODE';
 
-export const EXCEPTION = 'exception';
+export const EXCEPTION = 'exceptions';
 export enum ErrorCode {
 	ACTION_UNAVAILABLE = 'BV001',
 	INVALID_CHIP_AMOUNT = 'BV002',
 	UUID_NOT_GENERATED = 'SYS000',
+	SYSTEM_ERROR = 'SYS001',
 }
 
 /**
@@ -117,3 +118,8 @@ export const DEFAULT_SEAT_LIMIT = 9;
 export const DEFAULT_PLAYERS_TO_START = 2;
 export const MAX_SEAT_LIMIT = 14;
 export const DEFAULT_BLIND_AMOUNT = Blind.Twenty;
+
+export enum RedisCommand {
+	JsonGet = 'JSON.GET',
+	JsonSet = 'JSON.SET',
+}

@@ -23,8 +23,9 @@ export class ConnectionsService {
         this._server = value;
     }
 
-    get gameNamespace(): Namespace {
-        return this.server.of(WEBSOCKET_GAME_NAMESPACE);
+    get gameNamespace() {
+        // return this.server.of(WEBSOCKET_GAME_NAMESPACE);
+        return this.server;
     }
 
     async purge() {

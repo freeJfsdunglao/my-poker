@@ -4,7 +4,6 @@ import { WsException } from '@nestjs/websockets';
 import { ErrorCode } from 'src/common/constants';
 import { UuidGeneratorService } from 'src/randomizer/uuid-generator/uuid-generator.service';
 import { Repository } from 'typeorm';
-import { ClientCreateGameTableDto } from './dtos/client-create-game-table.dto';
 import { CreateGameTableDto } from './dtos/create-game-table.dto';
 import { GameTableDto } from './dtos/game-table.dto';
 import { UpdateGameTableDto } from './dtos/update-game-table.dto';
@@ -30,7 +29,7 @@ export class TablesService {
         }
         
         const existing = await this.gameTableRepository.findOne({ 
-            select: ['id'],
+            select: ['uuid'],
             where: { uuid: tableId },
         });
 
@@ -58,14 +57,13 @@ export class TablesService {
     }
     
     public async createTable(dto: CreateGameTableDto): Promise<GameTableDto> {
-        const uuid = await this._generateUuid();
+        const { uuid } = await this.gameTableFactory.saveToDatabase(dto);
         const key = this.constructKey(uuid);
         dto.uuid = uuid;
-        
-        await this.gameTableFactory.saveToDatabase(dto);
-        await this.gameTableFactory.saveToRedis(key, dto);
 
-        const gameTable = await this.gameTableFactory.fetchCached(key);
+        await this.gameTableFactory.saveJson(key, '$', dto);
+
+        const gameTable = await this.gameTableFactory.getJson(key);
         
         return gameTable;
     }
@@ -74,8 +72,9 @@ export class TablesService {
 
     }
 
-    public async getTable(tableId: string) {
-
+    public async getTable(tableId: string): Promise<GameTableDto> {
+        const key = this.constructKey(tableId);
+        return await this.gameTableFactory.getJson(key);
     }
 
     /* 

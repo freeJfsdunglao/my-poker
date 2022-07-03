@@ -4,18 +4,19 @@ import {
 	Injectable,
 	Logger
 } from '@nestjs/common';
-import { Cache } from 'cache-manager';
 
 import { ConfigurationsService } from '../configurations/configurations.service';
 
-import { EnvironmentType } from '../common/constants';
+import { EnvironmentType, RedisCommand } from '../common/constants';
+import { RedisCache } from './interfaces/redis-cache.interface';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class RedisService {
 	private readonly logger = new Logger(RedisService.name);
 
 	constructor(
-		@Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+		@Inject(CACHE_MANAGER) private readonly cacheManager: RedisCache,
 		private readonly config: ConfigurationsService,
 	) {
 		if (config.applicationLevel !== EnvironmentType.Production) {
@@ -34,8 +35,21 @@ export class RedisService {
 		return this.cacheManager.store.getClient();
 	}
 
-	public get json() {
-		return this.cacheManager.store.getClient().json;
+	public async useCommand<T>(command: RedisCommand, params: string[]): Promise<T> {
+		return await new Promise<T>((resolve, reject) => {
+			this.client.send_command(
+				command,
+				params,
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(reply);
+				}
+			);
+		});
 	}
 
 	public async testCaching(): Promise<void> {
@@ -56,8 +70,6 @@ export class RedisService {
 	public async anotherTesting(): Promise<void> {
 		await this.setCache('sample', { 'hello': 'world' });
 		const data = await this.getCache('sample');
-
-		console.log('testing result', data);
 	}
 
 	public async furtherTestCaching(times: number): Promise<void> {
@@ -83,12 +95,12 @@ export class RedisService {
 		this.deleteCache('this:is:an:unexisting:key:check:if:no:error');
 	}
 
-	public async getCache<T>(key: string): Promise<Cache> {
+	public async getCache<T>(key: string): Promise<T> {
 		return await this.cacheManager.get<T>(key);
 	}
 
-	public async setCache<T>(key: string, data: Object | string): Promise<Cache> {
-		return await this.cacheManager.set<T>(key, data);
+	public async setCache(key: string, data: Object | string): Promise<void> {
+		await this.cacheManager.set(key, data);
 	}
 
 	public async scanForKeys(pattern: string): Promise<string[]> {

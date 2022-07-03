@@ -17,23 +17,21 @@ import {
 } from "src/common/constants";
 import { Column, Entity, Index, PrimaryGeneratedColumn, Unique } from "typeorm";
 
-@Unique('uq_table_id', ['uuid'])
 @Index('idx_blindamount', ['blindAmount'])
 @Entity()
 export class GameTable {
-    @PrimaryGeneratedColumn()
-    id: string;
-    
-    @Column()
-    @IsUUID()
-    @IsNotEmpty()
+    @PrimaryGeneratedColumn('uuid')
     uuid: string;
     
-    @Column()
+    @Column({
+        default: TableType.TEXAS_HOLDEM,
+    })
     @IsEnum(TableType)
     type: TableType = TableType.TEXAS_HOLDEM;
 
-    @Column()
+    @Column({
+        default: DEFAULT_BLIND_AMOUNT,
+    })
     @IsNumber({ 
         allowInfinity: false,
         allowNaN: false,
@@ -41,7 +39,9 @@ export class GameTable {
     @IsPositive()
     blindAmount: number = DEFAULT_BLIND_AMOUNT;
 
-    @Column()
+    @Column({
+        default: DEFAULT_SEAT_LIMIT
+    })
     @IsNumber({ 
         allowInfinity: false,
         allowNaN: false,
@@ -51,7 +51,9 @@ export class GameTable {
     @Max(MAX_SEAT_LIMIT)
     seatLimit: number = DEFAULT_SEAT_LIMIT;
 
-    @Column()
+    @Column({
+        default: false,
+    })
     @IsBoolean()
     isPrivate: boolean = false;
 }

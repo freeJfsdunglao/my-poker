@@ -16,13 +16,7 @@ import {
 } from "src/common/constants";
 import { GameTable } from "../entities/game-table.entity";
 
-export class GameTableDto 
-extends OmitType(
-    GameTable,
-    [
-        'id',
-    ] as const
-) {
+export class GameTableDto extends GameTable {
     @IsBoolean()
     inProgress: boolean = false;
 

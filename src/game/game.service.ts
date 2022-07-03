@@ -4,6 +4,7 @@ import { ConnectionsService } from './connections/connections.service';
 import { ClientCreateGameTableDto } from './tables/dtos/client-create-game-table.dto';
 import { GameTableDto } from './tables/dtos/game-table.dto';
 import { JoinGameTableDto } from './tables/dtos/join-game-table.dto';
+import { GameTableFactory } from './tables/factories/game-table.factory';
 import { TablesService } from './tables/tables.service';
 
 @Injectable()
@@ -21,8 +22,9 @@ export class GameService {
          * else:
          *      get random game table or create own game table
          */
-        
-        // await this.connectionsService.joinGame(client, gameTable);
+
+        const gameTable = await this.tablesService.getTable(dto.uuid);
+        await this.joinGame(client, gameTable);
     }
 
     public async playerCreateGameTable(client: Socket, dto: ClientCreateGameTableDto) {
@@ -45,5 +47,6 @@ export class GameService {
         
         await this.connectionsService.joinRoom(client, gameTable.uuid);
         await this.connectionsService.sendToRoom('message', roomName, gameTable);
+        await this.connectionsService.sendToRoom('message', roomName, 'sure ka na dian?');
     }
 }

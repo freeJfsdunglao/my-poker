@@ -27,10 +27,9 @@ async function bootstrap() {
     }
 
     if (config.willUseRedisCaching) {
-        const redisIoAdapter = new RedisIoAdapter(app, config);
-        await redisIoAdapter.connectToRedis();
-
-        app.useWebSocketAdapter(redisIoAdapter);
+        // const redisIoAdapter = new RedisIoAdapter(app, config);
+        // await redisIoAdapter.connectToRedis();
+        // app.useWebSocketAdapter(redisIoAdapter);
     }
     
     /**
