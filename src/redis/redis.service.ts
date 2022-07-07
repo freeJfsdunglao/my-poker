@@ -6,10 +6,12 @@ import {
 } from '@nestjs/common';
 
 import { ConfigurationsService } from '../configurations/configurations.service';
-
-import { EnvironmentType, RedisCommand } from '../common/constants';
+import { 
+	DEFAULT_REDIS_CACHE_EXPIRY_SECONDS, 
+	EnvironmentType, 
+	RedisCommand 
+} from '../common/constants';
 import { RedisCache } from './interfaces/redis-cache.interface';
-import { Cache } from 'cache-manager';
 
 @Injectable()
 export class RedisService {
@@ -112,7 +114,7 @@ export class RedisService {
 			const scannerFunction = async (cursorNumber: string) => {
 				this.client.scan(
 					cursorNumber,
-					'match',
+					'MATCH',
 					pattern,
 					(err, reply) => {
 						if (err) {
@@ -147,6 +149,228 @@ export class RedisService {
 	}
 
 	public async deleteCache(keyName: string): Promise<void> {
-		this.cacheManager.del(keyName);
+		await this.cacheManager.del(keyName);
+	}
+
+	public async getPartialJson<T>(key: string, path: string | string[]): Promise<T> {
+		if (typeof path === 'string') {
+			path = [path];
+		}
+		
+		return await new Promise<T>((resolve, reject) => {
+			this.client.send_command<T>(
+				RedisCommand.JsonGet,
+				[
+					key,
+					...path,
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(reply);
+				}
+			);
+		});
+	}
+
+	public async getFullJson<T>(key: string): Promise<T> {
+		return await this.getPartialJson(key, '$');
+	}
+
+	public async setJson(
+		key: string, 
+		path: string, 
+		data: Object,
+		ttl: number = DEFAULT_REDIS_CACHE_EXPIRY_SECONDS
+	): Promise<void> {
+		await new Promise<void>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.JsonSet,
+				[
+					key, 
+					path, 
+					JSON.stringify(data),
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					console.log('set data reply', reply);
+					
+					resolve();
+				}
+			);
+		});
+
+		await new Promise<void>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.Expire,
+				[
+					key,
+					ttl
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					console.log('set expiry on data reply', reply);
+					
+					resolve();
+				}
+			);
+		});
+	}
+
+	public async setGetJson<T>(
+		key: string, 
+		path: string, 
+		data: Object,
+		ttl: number = DEFAULT_REDIS_CACHE_EXPIRY_SECONDS
+	): Promise<T> {
+		await this.setJson(key, path, data, ttl);
+		return await this.getFullJson<T>(key);
+	}
+
+	public async setAdd(key: string, value: string): Promise<void> {
+		await new Promise<void>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.SetAdd,
+				[
+					key,
+					value,
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				}
+			);
+		});
+	}
+
+	public async setCount(key: string, value: string): Promise<number> {
+		return await new Promise<number>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.SetCard,
+				[ key ],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(reply);
+				}
+			);
+		});
+	}
+
+	public async isSetMember(key: string, value: string): Promise<boolean> {
+		return await new Promise<boolean>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.SetIsMember,
+				[
+					key,
+					value,
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(!!reply);
+				}
+			);
+		});
+	}
+
+	public async getRandomMember(
+		key: string, 
+		count: number = 1
+	): Promise<string | string[]> {
+		return await new Promise<string | string[]>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.SetRandomMember,
+				[
+					key,
+					count,
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(reply);
+				}
+			);
+		});
+	}
+
+	public async scanSetForKey(key: string, pattern: string): Promise<string[]> {
+		const scanFullResult = [];
+		
+		await new Promise<void>(async (resolve, reject): Promise<void> => {
+			const scannerFunction = async (cursorNumber: string) => {
+				this.client.send_command(
+					RedisCommand.SetScan,
+					[
+						key,
+						cursorNumber, 
+						'MATCH',
+						pattern,
+					],
+					(err, reply) => {
+						if (err) {
+							reject(err);
+							return;
+						}
+
+						scanFullResult.push(...reply[1]);
+
+						if (reply[0] !== '0') {
+							scannerFunction(reply[0]);
+						}
+
+						resolve();
+					}
+				);
+			};
+
+			await scannerFunction('0');
+		});
+
+		return [...new Set(scanFullResult)];
+	}
+
+	public async setRemove(key: string, value: string): Promise<boolean> {
+		return await new Promise<boolean>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.SetRemove,
+				[
+					key,
+					value,
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(!!reply);
+				}
+			);
+		});
 	}
 }

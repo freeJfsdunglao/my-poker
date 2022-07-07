@@ -4,7 +4,6 @@ import { ConnectionsService } from './connections/connections.service';
 import { ClientCreateGameTableDto } from './tables/dtos/client-create-game-table.dto';
 import { GameTableDto } from './tables/dtos/game-table.dto';
 import { JoinGameTableDto } from './tables/dtos/join-game-table.dto';
-import { GameTableFactory } from './tables/factories/game-table.factory';
 import { TablesService } from './tables/tables.service';
 
 @Injectable()

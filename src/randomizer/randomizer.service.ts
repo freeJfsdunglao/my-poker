@@ -26,4 +26,14 @@ export class RandomizerService extends GeneratorService {
 
 		return newArray;
 	}
+
+	/**
+	 * Generate a random whole number using a min-max range.
+	 * @param min default 0
+	 * @param max default 100
+	 * @returns number
+	 */
+	public wholeNumber(min: number = 0, max: number = 100): number {
+		return this.generate(max - min) + min;
+	}
 }

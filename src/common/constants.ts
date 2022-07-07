@@ -122,4 +122,16 @@ export const DEFAULT_BLIND_AMOUNT = Blind.Twenty;
 export enum RedisCommand {
 	JsonGet = 'JSON.GET',
 	JsonSet = 'JSON.SET',
+	Expire = 'EXPIRE',
+	SetAdd = 'SADD',
+	SetCard = 'SCARD',
+	SetIsMember = 'SISMEMBER',
+	SetRandomMember = 'SRANDMEMBER',
+	SetScan = 'SSCAN',
+	SetRemove = 'SREM',
+}
+
+export enum CachePrefix {
+	GameTable = 'game:',
+	AvailableTables = 'available_tables',
 }

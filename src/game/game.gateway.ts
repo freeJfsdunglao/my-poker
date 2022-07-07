@@ -1,4 +1,9 @@
-import { UseFilters, UseInterceptors, UsePipes } from '@nestjs/common';
+import { 
+  UseFilters, 
+  UseInterceptors, 
+  UsePipes, 
+  ValidationPipe as NestValidationPipe,
+} from '@nestjs/common';
 import { 
   OnGatewayConnection, 
   OnGatewayDisconnect, 
@@ -26,7 +31,7 @@ const WEBSOCKET_OPTIONS = {
 };
 
 @UseFilters(new AllWsExceptionsFilter(),new ValidationWsExceptionFilter())
-@UsePipes(new ValidationWsPipe())
+@UsePipes(new ValidationWsPipe(), new NestValidationPipe({ transform: true }))
 @UseInterceptors(LoggingWsInterceptor)
 @WebSocketGateway(WEBSOCKET_OPTIONS)
 export class GameGateway 

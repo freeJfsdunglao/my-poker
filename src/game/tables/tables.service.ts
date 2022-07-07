@@ -1,75 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { WsException } from '@nestjs/websockets';
-import { ErrorCode } from 'src/common/constants';
-import { UuidGeneratorService } from 'src/randomizer/uuid-generator/uuid-generator.service';
-import { Repository } from 'typeorm';
+import { plainToClass } from 'class-transformer';
+import { CachePrefix } from 'src/common/constants';
 import { CreateGameTableDto } from './dtos/create-game-table.dto';
 import { GameTableDto } from './dtos/game-table.dto';
 import { UpdateGameTableDto } from './dtos/update-game-table.dto';
-import { GameTable } from './entities/game-table.entity';
 import { GameTableFactory } from './factories/game-table.factory';
 
 @Injectable()
 export class TablesService {
     constructor(
         private readonly gameTableFactory: GameTableFactory,
-        @InjectRepository(GameTable)
-        private readonly gameTableRepository: Repository<GameTable>,
-        private readonly uuidGenetorService: UuidGeneratorService,
     ) {}
     
     get defaultTable(): GameTableDto {
         return this.gameTableFactory.create({});
     }
 
-    private async _verifyUuid(tableId: string): Promise<boolean> {
-        if (!tableId) {
-            throw new WsException(ErrorCode.UUID_NOT_GENERATED);
-        }
-        
-        const existing = await this.gameTableRepository.findOne({ 
-            select: ['uuid'],
-            where: { uuid: tableId },
-        });
-
-        if (existing) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private async _generateUuid(): Promise<string> {
-        let isValid = false;
-        let generatedUuid = '';
-        
-        do {
-            generatedUuid = this.uuidGenetorService.generate();
-            isValid = await this._verifyUuid(generatedUuid);
-        } while (isValid === false)
-
-        return generatedUuid;
-    }
-
     private constructKey(tableId: string): string {
-        return `game:${tableId}`;
+        return CachePrefix.GameTable + tableId;
     }
     
     public async createTable(dto: CreateGameTableDto): Promise<GameTableDto> {
-        const { uuid } = await this.gameTableFactory.saveToDatabase(dto);
-        const key = this.constructKey(uuid);
-        dto.uuid = uuid;
+        const saveTableDb = await this.gameTableFactory.saveToDatabase(dto);
+        const key = this.constructKey(saveTableDb.uuid);
+        const gameTableDto = plainToClass(GameTableDto, saveTableDb);
+        const gameTable = await this.gameTableFactory.setGetJson(key, '$', gameTableDto);
 
-        await this.gameTableFactory.saveJson(key, '$', dto);
-
-        const gameTable = await this.gameTableFactory.getJson(key);
-        
         return gameTable;
     }
 
-    public async deleteTable(tableId: string) {
-
+    public async deleteTable(tableId: string): Promise<void> {
+        const key = this.constructKey(tableId);
+        await this.gameTableFactory.deleteInCache(key);
     }
 
     public async getTable(tableId: string): Promise<GameTableDto> {
@@ -77,11 +39,12 @@ export class TablesService {
         return await this.gameTableFactory.getJson(key);
     }
 
-    /* 
     public async getRandomTable(): Promise<GameTableDto> {
-        return 
+        const key = await this.gameTableFactory.getRandomTableKey();
+        const gameTable = await this.gameTableFactory.getJson(key);
+        
+        return gameTable;
     } 
-    */
 
     public async updateTable(tableId: string, dto: UpdateGameTableDto) {
 

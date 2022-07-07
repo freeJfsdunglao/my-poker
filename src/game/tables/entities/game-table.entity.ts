@@ -18,6 +18,7 @@ import {
 import { Column, Entity, Index, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Index('idx_blindamount', ['blindAmount'])
+@Index('idx_type', ['type'])
 @Entity()
 export class GameTable {
     @PrimaryGeneratedColumn('uuid')
@@ -25,6 +26,7 @@ export class GameTable {
     
     @Column({
         default: TableType.TEXAS_HOLDEM,
+        length: 20
     })
     @IsEnum(TableType)
     type: TableType = TableType.TEXAS_HOLDEM;

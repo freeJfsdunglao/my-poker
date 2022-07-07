@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RedisCommand } from "src/common/constants";
+import { CachePrefix, DEFAULT_REDIS_CACHE_EXPIRY_SECONDS } from "src/common/constants";
 import { RedisService } from "src/redis/redis.service";
 import { Repository } from "typeorm";
 import { CreateGameTableDto } from "../dtos/create-game-table.dto";
@@ -15,9 +15,7 @@ export class GameTableFactory {
         @InjectRepository(GameTable)
         private readonly gameTableRepository: Repository<GameTable>,
         private readonly redisService: RedisService,
-    ) {
-
-    }
+    ) {}
     
     create(dto: CreateGameTableDto): GameTableDto {
         const defaultTable = {
@@ -63,46 +61,39 @@ export class GameTableFactory {
     async saveJson(
         key: string, 
         path: string = '$', 
-        jsonData: UpdateGameTableDto
+        jsonData: UpdateGameTableDto,
+        ttl: number = DEFAULT_REDIS_CACHE_EXPIRY_SECONDS
     ): Promise<void> {
-        return await this.redisService.useCommand(
-            RedisCommand.JsonSet,
-            [
-                key,
-                path,
-                JSON.stringify(jsonData),
-            ]
-        );
-        // return await this.redisService.json.set(key, path, jsonData);
-        // console.log(this.redisService.client.send_command());
-        // return await this.redisService.manager.store.getClient().json(key, path, jsonData);
+        return await this.redisService.setJson(key, path, jsonData, ttl);
     }
 
     async getJson(key: string): Promise<GameTableDto> {
-        return await this.redisService.useCommand<GameTableDto>(
-            RedisCommand.JsonGet,
-            [
-                key,
-                '$'
-            ]
-        );
-        // return await this.redisService.client.call('JSON.GET', key, '$');
-        // return await this.redisService.json.get(key, { path: '$' });
+        return await this.redisService.getFullJson<GameTableDto>(key);
     }
     
     async getPartialJson(key: string, path: string | string[]): Promise<PartialGameTable> {
-        if (Array.isArray(path) === true) {
-            path = (path as string[]).join(' ');
-        }
-        
-        return await this.redisService.useCommand<PartialGameTable>(
-            RedisCommand.JsonGet,
-            [
-                key,
-                (path as string),
-            ]
-        );
-        // return await this.redisService.json.get(key, { path });
-        // return await this.redisService.client.call('JSON.SET', key, ...path);
+        return await this.redisService.getPartialJson<PartialGameTable>(key, path);
+    }
+
+    async setGetJson(
+        key: string, 
+        path: string = '$', 
+        jsonData: UpdateGameTableDto,
+        ttl: number = DEFAULT_REDIS_CACHE_EXPIRY_SECONDS
+    ): Promise<GameTableDto> {
+        return this.redisService.setGetJson<GameTableDto>(key, path, jsonData, ttl);
+    }
+
+    async deleteInCache(key: string): Promise<void> {
+        await this.redisService.deleteCache(key);
+    }
+
+    async getRandomTableKey(): Promise<string> {
+        const rMem =  await this.redisService.getRandomMember(CachePrefix.AvailableTables);
+        let member: string = Array.isArray(rMem) === true 
+            ? (rMem as string[]).pop() 
+            : (rMem as string);
+
+        return member;
     }
 }
