@@ -14,7 +14,6 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FiltersModule } from './filters/filters.module';
 import { PipesModule } from './pipes/pipes.module';
-import { GameModule } from './game/game.module';
 import { InterceptorsModule } from './interceptors/interceptors.module';
 @Module({
     imports: [
@@ -29,7 +28,6 @@ import { InterceptorsModule } from './interceptors/interceptors.module';
         AuthModule, 
         FiltersModule, 
         PipesModule, 
-        GameModule, 
         InterceptorsModule, 
     ],
     controllers: [AppController],
