@@ -9,7 +9,9 @@ import { ConfigurationsService } from '../configurations/configurations.service'
 import { 
 	DEFAULT_REDIS_CACHE_EXPIRY_SECONDS, 
 	EnvironmentType, 
-	RedisCommand 
+	parseJson, 
+	RedisCommand, 
+	stringifyJson
 } from '../common/constants';
 import { RedisCache } from './interfaces/redis-cache.interface';
 
@@ -110,7 +112,7 @@ export class RedisService {
 		
 		const scanFullResult = [];
 
-		await new Promise(async (resolve, reject): Promise<void> => {
+		await new Promise<void>(async (resolve, reject): Promise<void> => {
 			const scannerFunction = async (cursorNumber: string) => {
 				this.client.scan(
 					cursorNumber,
@@ -129,7 +131,7 @@ export class RedisService {
 						}
 
 						this.logger.debug('Redis scanner working perfectly ¯\\_(ツ)_/¯');
-						resolve({});
+						resolve();
 					},
 				);
 			};
@@ -154,7 +156,7 @@ export class RedisService {
 
 	public async getPartialJson<T>(key: string, path: string | string[]): Promise<T> {
 		if (typeof path === 'string') {
-			path = [path];
+			path = [(path as string)];
 		}
 		
 		return await new Promise<T>((resolve, reject) => {
@@ -162,7 +164,7 @@ export class RedisService {
 				RedisCommand.JsonGet,
 				[
 					key,
-					...path,
+					...(path as string[]),
 				],
 				(err, reply) => {
 					if (err) {
@@ -170,14 +172,23 @@ export class RedisService {
 						return;
 					}
 
-					resolve(reply);
+					let resultToArray = parseJson(reply);
+
+					if (Array.isArray(resultToArray) === true) {
+						resultToArray = resultToArray[0];
+					} else {
+						resolve(resultToArray);
+						return;
+					}
+
+					resolve(parseJson(resultToArray));
 				}
 			);
 		});
 	}
 
 	public async getFullJson<T>(key: string): Promise<T> {
-		return await this.getPartialJson(key, '$');
+		return await this.getPartialJson<T>(key, '$');
 	}
 
 	public async setJson(
@@ -186,13 +197,15 @@ export class RedisService {
 		data: Object,
 		ttl: number = DEFAULT_REDIS_CACHE_EXPIRY_SECONDS
 	): Promise<void> {
+		data = stringifyJson(data);
+		
 		await new Promise<void>((resolve, reject) => {
 			this.client.send_command(
 				RedisCommand.JsonSet,
 				[
 					key, 
 					path, 
-					JSON.stringify(data),
+					data,
 				],
 				(err, reply) => {
 					if (err) {
@@ -243,13 +256,15 @@ export class RedisService {
 		path: string,
 		data: Object,
 	): Promise<T> {
+		data = stringifyJson(data);
+		
 		return await new Promise<T>((resolve, reject) => {
 			this.client.send_command(
 				RedisCommand.JsonAppend,
 				[
 					key,
 					path,
-					JSON.stringify(data),
+					data,
 				],
 				(err, reply) => {
 					if (err) {

@@ -139,3 +139,25 @@ export enum CachePrefixSuffix {
 	GameTablePlayers = ':players',
 	PlayerSession = 'player:',
 }
+
+export const parseJson = (jsonString: any) => {
+    try {
+        const jsonData = JSON.parse(jsonString);
+        return jsonData;
+    } catch (err) {
+        return jsonString;
+    }
+}
+
+export const stringifyJson = (jsonObject: any) => {
+    try {
+        if (jsonObject && typeof jsonObject === 'object') {
+            const jsonString = JSON.stringify(jsonObject);
+            return jsonString;
+        }
+
+        return jsonObject;
+    } catch (err) {
+        return jsonObject;
+    }
+}
