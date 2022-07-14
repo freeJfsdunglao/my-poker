@@ -1,5 +1,6 @@
 import { 
   UseFilters, 
+  UseGuards, 
   UseInterceptors, 
   UsePipes, 
   ValidationPipe as NestValidationPipe,
@@ -23,6 +24,7 @@ import { GameService } from './game.service';
 import { ClientCreateGameTableDto } from './tables/dtos/client-create-game-table.dto';
 import { JoinGameTableDto } from './tables/dtos/join-game-table.dto';
 import { AllWsExceptionsFilter } from 'src/filters/all-ws-exception.filter';
+import { AuthGuard } from '@nestjs/passport';
 
 const WEBSOCKET_OPTIONS = {
   transports: ['websocket'],
@@ -30,6 +32,7 @@ const WEBSOCKET_OPTIONS = {
   namespace: WEBSOCKET_GAME_NAMESPACE,
 };
 
+@UseGuards(AuthGuard('jwt'))
 @UseFilters(new AllWsExceptionsFilter(),new ValidationWsExceptionFilter())
 @UsePipes(new ValidationWsPipe(), new NestValidationPipe({ transform: true }))
 @UseInterceptors(LoggingWsInterceptor)

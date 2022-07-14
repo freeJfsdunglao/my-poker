@@ -3,7 +3,6 @@ import { Role } from 'src/common/constants';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { Roles } from './decorators/roles.decorator';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
@@ -12,6 +11,8 @@ export class AuthController {
         private authService: AuthService,
     ) {}
     
+    @Public()
+    @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req) {
         return await this.authService.login(req.user);

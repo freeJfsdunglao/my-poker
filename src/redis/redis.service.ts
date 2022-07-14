@@ -238,6 +238,31 @@ export class RedisService {
 		return await this.getFullJson<T>(key);
 	}
 
+	public async jsonArrayAppend<T>(
+		key: string,
+		path: string,
+		data: Object,
+	): Promise<T> {
+		return await new Promise<T>((resolve, reject) => {
+			this.client.send_command(
+				RedisCommand.JsonAppend,
+				[
+					key,
+					path,
+					JSON.stringify(data),
+				],
+				(err, reply) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(reply);
+				}
+			);
+		});
+	}
+
 	public async setAdd(key: string, value: string): Promise<void> {
 		await new Promise<void>((resolve, reject) => {
 			this.client.send_command(

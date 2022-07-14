@@ -1,10 +1,8 @@
 import { 
     IsBoolean, 
     IsEnum, 
-    IsNotEmpty, 
     IsNumber, 
     IsPositive,
-    IsUUID,
     Max,
     Min, 
 } from "class-validator";
@@ -15,7 +13,7 @@ import {
     MAX_SEAT_LIMIT, 
     TableType, 
 } from "src/common/constants";
-import { Column, Entity, Index, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Index('idx_blindamount', ['blindAmount'])
 @Index('idx_type', ['type'])

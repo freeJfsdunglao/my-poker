@@ -44,6 +44,7 @@ export enum PlayerStatus {
 	SIT_OUT = 'sit_out',
 	PLAYING = 'playing',
 	FOLDED = 'folded',
+	SPECTATING = 'spectating',
 	DISCONNECTED = 'disconnected',
 }
 
@@ -87,8 +88,8 @@ export enum ErrorCode {
  */
 export const JWT_EXPIRATION = '60s';
 
-export const PUBLIC_KEY_FOR_AUTH_GUARD = process.env['JWT_PUBLIC_KEY'] || '';
-export const KEY_FOR_ROLES_GUARD = process.env['ROLES_KEY'] || '';
+export const PUBLIC_KEY_FOR_AUTH_GUARD = process.env['JWT_PUBLIC_KEY'] || 'JOKE_JWT_KEY';
+export const KEY_FOR_ROLES_GUARD = process.env['ROLES_KEY'] || 'JOKE_ROLE_KEY';
 
 export enum Role {
 	User = 'user',
@@ -123,6 +124,7 @@ export enum RedisCommand {
 	JsonGet = 'JSON.GET',
 	JsonSet = 'JSON.SET',
 	Expire = 'EXPIRE',
+	JsonAppend = 'JSON.ARRAPPEND',
 	SetAdd = 'SADD',
 	SetCard = 'SCARD',
 	SetIsMember = 'SISMEMBER',
@@ -131,7 +133,9 @@ export enum RedisCommand {
 	SetRemove = 'SREM',
 }
 
-export enum CachePrefix {
+export enum CachePrefixSuffix {
 	GameTable = 'game:',
 	AvailableTables = 'available_tables',
+	GameTablePlayers = ':players',
+	PlayerSession = 'player:',
 }
