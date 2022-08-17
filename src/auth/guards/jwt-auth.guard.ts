@@ -3,11 +3,11 @@ import { Reflector } from "@nestjs/core";
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import { AuthGuard } from "@nestjs/passport";
 import { Observable } from "rxjs";
-import { PUBLIC_KEY_FOR_AUTH_GUARD } from "src/common/constants";
+import { JWT_STRATEGY_NAME, PUBLIC_KEY_FOR_AUTH_GUARD } from "src/common/constants";
 import { UnauthorizedWsException } from "src/exceptions/unauthorized-ws-exception";
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard(JWT_STRATEGY_NAME) {
     constructor(private reflector: Reflector) {
         super();
     }

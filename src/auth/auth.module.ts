@@ -10,6 +10,7 @@ import { ConfigurationsService } from 'src/configurations/configurations.service
 import { JWT_EXPIRATION } from 'src/common/constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GuardsModule } from './guards/guards.module';
+import { JwtWsStrategy } from './strategies/jwt-ws.strategy';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { GuardsModule } from './guards/guards.module';
     AuthService, 
     LocalStrategy,
     JwtStrategy,
+    JwtWsStrategy,
   ],
   controllers: [AuthController],
 })

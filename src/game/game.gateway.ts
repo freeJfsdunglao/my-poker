@@ -25,6 +25,8 @@ import { ClientCreateGameTableDto } from './tables/dtos/client-create-game-table
 import { JoinGameTableDto } from './tables/dtos/join-game-table.dto';
 import { AllWsExceptionsFilter } from 'src/filters/all-ws-exception.filter';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtWsAuthGuard } from 'src/auth/guards/jwt-ws-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 const WEBSOCKET_OPTIONS = {
   transports: ['websocket'],
@@ -32,7 +34,7 @@ const WEBSOCKET_OPTIONS = {
   namespace: WEBSOCKET_GAME_NAMESPACE,
 };
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtWsAuthGuard)
 @UseFilters(new AllWsExceptionsFilter(),new ValidationWsExceptionFilter())
 @UsePipes(new ValidationWsPipe(), new NestValidationPipe({ transform: true }))
 @UseInterceptors(LoggingWsInterceptor)
@@ -73,8 +75,10 @@ implements
     await this.gameService.playerJoinGameTable(client, dto);
   }
 
+  // @Public() // <-- if open to the public.
   @SubscribeMessage('createGameTable')
   async handleClientCreateGameTable(client: Socket, dto: ClientCreateGameTableDto) {
+    console.log('request', client.request);
     await this.gameService.playerCreateGameTable(client, dto);
   }
 }

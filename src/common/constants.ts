@@ -161,3 +161,6 @@ export const stringifyJson = (jsonObject: any) => {
         return jsonObject;
     }
 }
+
+export const JWT_WS_STRATEGY_NAME = 'jwt-ws';
+export const JWT_STRATEGY_NAME = 'jwt';

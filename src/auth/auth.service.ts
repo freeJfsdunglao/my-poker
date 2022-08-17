@@ -28,6 +28,6 @@ export class AuthService {
             sub: user.userId,
         }
 
-        return { access_token: this.jwtService.sign(payload) };
+        return { access_token: 'Bearer ' + this.jwtService.sign(payload) };
     }
 }

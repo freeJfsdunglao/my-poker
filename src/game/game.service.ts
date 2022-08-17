@@ -35,7 +35,7 @@ export class GameService {
          */
         const gameTable = await this.tablesService.createTable(dto);
         await this.playersService.createTable(gameTable.uuid);
-        await this.playersService.joinTable(gameTable.uuid, ) // CHECK THIS
+        // await this.playersService.joinTable(gameTable.uuid, ) // CHECK THIS
         await this.joinGame(client, gameTable);
     }
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
+import { Socket } from 'socket.io';
 import { CachePrefixSuffix } from 'src/common/constants';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { PlayerDto } from './dtos/player.dto';
@@ -42,5 +43,10 @@ export class PlayersService {
         const playerTableKey = this.constructTablePlayerArrayKey(tableId);
         
         await this.playerRedisFactory.appendPlayer(playerTableKey, '$', dto);
+    }
+
+    public async getDbPlayerViaSocket(client: Socket) {
+        console.log('player data', client);
+        // return await this.playerDbFactory.fetch()
     }
 }
