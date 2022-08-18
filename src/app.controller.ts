@@ -9,8 +9,8 @@ import {
 
 import { AppService } from './app.service';
 
-import { MicroserviceList } from './common/constants';
-import { LoggerService } from './logger/logger.service';
+import { MicroserviceList } from 'src/shared/common/constants';
+import { LoggerService } from 'src/shared/logger/logger.service';
 
 @Controller()
 export class AppController {

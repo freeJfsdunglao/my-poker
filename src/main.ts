@@ -3,8 +3,8 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
 
 import { ApplicationModule } from './app.module';
-import { ConfigurationsService } from './configurations/configurations.service';
-import { RedisIoAdapter } from './redis/redis-io.adapter';
+import { ConfigurationsService } from 'src/shared/configurations/configurations.service';
+import { RedisIoAdapter } from 'src/shared/redis/redis-io.adapter';
 
 async function bootstrap() {
     const logger = new Logger(ApplicationModule.name);

@@ -3,19 +3,20 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { ConfigurationsModule } from './configurations/configurations.module';
-import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
-import { RedisModule } from './redis/redis.module';
-import { RandomizerModule } from './randomizer/randomizer.module';
-import { SchedulerModule } from './scheduler/scheduler.module';
-import { TypeormModule } from './typeorm/typeorm.module';
-import { LoggerModule } from './logger/logger.module';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { FiltersModule } from './filters/filters.module';
-import { PipesModule } from './pipes/pipes.module';
-import { GameModule } from './game/game.module';
-import { InterceptorsModule } from './interceptors/interceptors.module';
+import { RandomizerModule } from 'src/apps/randomizer/randomizer.module';
+import { UsersModule } from 'src/apps/users/users.module';
+import { AuthModule } from 'src/apps/auth/auth.module';
+import { GameModule } from 'src/apps/game/game.module';
+
+import { ConfigurationsModule } from 'src/shared/configurations/configurations.module';
+import { RabbitmqModule } from 'src/shared/rabbitmq/rabbitmq.module';
+import { RedisModule } from 'src/shared/redis/redis.module';
+import { SchedulerModule } from 'src/shared/scheduler/scheduler.module';
+import { TypeormModule } from 'src/shared/typeorm/typeorm.module';
+import { LoggerModule } from 'src/shared/logger/logger.module';
+import { FiltersModule } from 'src/shared/filters/filters.module';
+import { PipesModule } from 'src/shared/pipes/pipes.module';
+import { InterceptorsModule } from 'src/shared/interceptors/interceptors.module';
 @Module({
     imports: [
         ConfigurationsModule, 
